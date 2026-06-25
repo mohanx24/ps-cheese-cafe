@@ -83,7 +83,7 @@ export default function MenuPreview() {
     const previousFocus = document.activeElement as HTMLElement | null;
     const focusableElementsSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
     const modal = modalRef.current;
-    
+
     if (modal) {
       const focusables = modal.querySelectorAll<HTMLElement>(focusableElementsSelector);
       if (focusables.length > 0) {
@@ -98,13 +98,42 @@ export default function MenuPreview() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsMenuOpen(false);
+        return;
+      }
+
+      // Focus trap: Tab cycles within modal
+      if (e.key === 'Tab' && modal) {
+        const focusables = Array.from(
+          modal.querySelectorAll<HTMLElement>(focusableElementsSelector)
+        ).filter((el) => !(el as HTMLButtonElement | HTMLInputElement).disabled && el.offsetParent !== null);
+
+        if (focusables.length === 0) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
+    // Lock body scroll
+    document.body.style.overflow = 'hidden';
+
     return () => {
       clearTimeout(timer);
       window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
       if (previousFocus) {
         previousFocus.focus();
       }
@@ -331,20 +360,23 @@ export default function MenuPreview() {
                       </div>
 
                       {/* Cover prompt */}
-                      <div className="mb-8 flex flex-col items-center gap-2">
+                      <div className="mb-8 flex flex-col items-center gap-3">
                         <span className="font-heading font-medium text-[10.5px] tracking-[0.15em] text-brand-accent uppercase">
                           View Full Menu
                         </span>
                         <p className="font-body font-light text-[11.5px] text-brand-inverse/50 italic">
                           Click cover to unfold
                         </p>
-                        <motion.div
-                          animate={{ x: [0, 5, 0] }}
-                          transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-                          className="text-brand-accent text-sm mt-1"
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsBookOpen(true);
+                          }}
+                          className="mt-1 px-5 py-2 rounded-full border border-brand-accent/40 text-brand-accent text-xs tracking-wider uppercase font-ui hover:bg-brand-accent/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#2D1B14]"
                         >
-                          →
-                        </motion.div>
+                          Open Menu
+                        </button>
                       </div>
                     </div>
 
@@ -442,13 +474,16 @@ export default function MenuPreview() {
                       <span className="font-heading font-medium text-[9.5px] tracking-[0.12em] text-brand-accent uppercase">
                         Tap To Flip &amp; Open Menu
                       </span>
-                      <motion.div
-                        animate={{ y: [0, 5, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-                        className="text-brand-accent text-xs mt-1"
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsBookOpen(true);
+                        }}
+                        className="mt-2 px-4 py-1.5 rounded-full border border-brand-accent/40 text-brand-accent text-[10px] tracking-wider uppercase font-ui hover:bg-brand-accent/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent"
                       >
-                        ↓
-                      </motion.div>
+                        Open Menu
+                      </button>
                     </div>
                   </div>
 

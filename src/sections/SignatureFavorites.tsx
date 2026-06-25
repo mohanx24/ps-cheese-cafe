@@ -158,6 +158,9 @@ export default function SignatureFavorites() {
           <p className="mt-3 font-body font-normal text-[clamp(14px,1.1vw,15px)] leading-[1.5] text-brand-text">
             Our most loved dishes, fanned to showcase their artisanal details. Drag or click to explore.
           </p>
+          <span className="sr-only">
+            Signature dishes carousel. Use left and right arrow keys to browse dishes. Click a dish to view its description.
+          </span>
         </div>
 
         {/* ═══ Fan Carousel with Spring Physics ═══ */}
@@ -216,6 +219,10 @@ export default function SignatureFavorites() {
                     ? 'shadow-[0_30px_60px_-15px_rgba(45,27,20,0.5),0_0_0_1px_rgba(198,161,91,0.2)]'
                     : 'shadow-[0_18px_36px_-12px_rgba(45,27,20,0.3)]'
                   }
+                  aria-hidden={!isActive}
+                  tabIndex={isActive ? 0 : -1}
+                  role="group"
+                  aria-label={isActive ? `${dish.name}: ${dish.desc}` : undefined}
                 >
                   {/* ── Card Border Ring (rounded corners visible) ── */}
                   <div

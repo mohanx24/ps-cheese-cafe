@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Logo from '@/components/Logo';
+import SideMenu from '@/components/SideMenu';
 import { WHATSAPP_RESERVE_URL } from '@/constants/links';
 
 const navLinks = [
@@ -217,65 +218,63 @@ export default function Navigation() {
           </motion.a>
         </motion.div>
 
-        {/* Mobile Hamburger */}
+        {/* Mobile Hamburger with SVG morph */}
         <button
-          className="md:hidden flex flex-col items-center justify-center gap-1.5 w-12 h-12"
+          className={`relative z-50 md:hidden flex items-center justify-center w-12 h-12 transition-colors duration-300 ${
+            menuOpen ? 'text-[#F7F3EE] hover:text-[#C6A15B]' : 'text-brand-dark hover:text-brand-accent-text'
+          }`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav-menu"
         >
-          <span
-            className={`block w-5 h-0.5 bg-brand-dark transition-transform duration-300 ${
-              menuOpen ? 'rotate-45 translate-y-2' : ''
-            }`}
-          />
-          <span
-            className={`block w-5 h-0.5 bg-brand-dark transition-opacity duration-300 ${
-              menuOpen ? 'opacity-0' : ''
-            }`}
-          />
-          <span
-            className={`block w-5 h-0.5 bg-brand-dark transition-transform duration-300 ${
-              menuOpen ? '-rotate-45 -translate-y-2' : ''
-            }`}
-          />
+          <svg
+            viewBox="0 0 32 32"
+            className="w-7 h-7"
+            style={{
+              transform: menuOpen ? "rotate(-45deg)" : "rotate(0deg)",
+              transition: "transform 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            {/* Top/bottom curved line */}
+            <path
+              d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              strokeDasharray={menuOpen ? "20 300" : "12 63"}
+              strokeDashoffset={menuOpen ? -32.42 : 0}
+              style={{
+                transition: "stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            />
+            {/* Middle line */}
+            <path
+              d="M7 16 27 16"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              style={{
+                opacity: menuOpen ? 0 : 1,
+                transition: "opacity 300ms ease",
+              }}
+            />
+          </svg>
         </button>
       </div>
 
-      {/* Mobile Overlay */}
-      <div
-        id="mobile-nav-menu"
-        className={`md:hidden fixed inset-x-0 bottom-0 top-[72px] bg-[rgba(250,247,242,0.98)] backdrop-blur-xl transition-all duration-500 ${
-          menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
-      >
-        <div className="flex flex-col items-center justify-center h-full gap-6 px-6">
-          {navLinks.map((link) => {
-            const targetId = link.href.replace('#', '');
-            const isActive = targetId === activeSection;
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className={`font-ui font-medium text-[clamp(12px,1.5vw,14px)] tracking-[0.08em] uppercase hover:text-brand-accent-text transition-colors py-4 px-6 block w-full text-center ${isActive ? 'text-brand-accent-text' : 'text-brand-dark'}`}
-              >
-                {link.label}
-              </a>
-            );
-          })}
-          <a
-            href={WHATSAPP_RESERVE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setMenuOpen(false)}
-            className="btn-primary rounded-full mt-6 h-11 px-8 text-sm flex items-center justify-center w-full max-w-[280px]"
-          >
-            Reserve Table
-          </a>
-        </div>
-      </div>
+      {/* Mobile Side Menu */}
+      <SideMenu
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        navLinks={navLinks}
+        activeSection={activeSection}
+        onNavClick={handleNavClick}
+      />
     </motion.nav>
   );
 }

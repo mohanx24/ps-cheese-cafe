@@ -65,13 +65,13 @@ export default function Gallery() {
                 key={index}
                 type="button"
                 onClick={() => setLightboxIdx(index)}
-                className={`relative rounded-[24px] overflow-hidden group border border-brand-border/20 cursor-pointer w-full text-left focus:outline-none bg-brand-bg-alt ${spanClass}`}
+                className={`relative rounded-[24px] overflow-hidden group border border-brand-border/20 cursor-pointer w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 bg-brand-bg-alt ${spanClass}`}
+                aria-label={`View ${img.alt} in fullscreen`}
                 whileHover={{
                   y: -8,
                   boxShadow: "0 24px 48px -12px rgba(45,27,20,0.15)",
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                aria-label="View image fullscreen"
               >
                 {/* Image */}
                 <motion.img

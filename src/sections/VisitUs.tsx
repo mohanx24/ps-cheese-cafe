@@ -82,7 +82,7 @@ export default function VisitUs() {
                 rel="noopener noreferrer"
                 className="btn-primary text-center min-h-[44px] flex items-center justify-center"
               >
-                Reserve a Table on WhatsApp
+                Reserve on WhatsApp
               </a>
               <p className="cta-microcopy text-center">
                 Instant reply · No booking fee · No form required

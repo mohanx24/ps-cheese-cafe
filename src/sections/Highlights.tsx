@@ -169,7 +169,7 @@ export default function Highlights() {
               className={`group relative p-8 rounded-3xl border border-brand-border/40 ${item.bg} flex flex-col justify-between transition-colors duration-300 ${item.colSpan}`}
             >
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-bg-alt/40 mb-6 transition-transform duration-300 group-hover:scale-110">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-accent/10 mb-6 transition-transform duration-300 group-hover:scale-110">
                   {item.icon}
                 </div>
                 <h3 className="font-heading font-normal text-[clamp(16px,1.5vw,19px)] text-brand-dark tracking-wide">

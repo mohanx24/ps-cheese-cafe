@@ -10,7 +10,6 @@ export default function Hero() {
   const labelRef = useRef<HTMLSpanElement>(null);
   const locationRef = useRef<HTMLSpanElement>(null);
   const headline1Ref = useRef<HTMLSpanElement>(null);
-  const headline2Ref = useRef<HTMLSpanElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
@@ -54,16 +53,6 @@ export default function Hero() {
             ease: 'power3.out',
           },
           '-=0.3'
-        )
-        .to(
-          headline2Ref.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-          },
-          '-=0.6'
         )
         .to(
           subRef.current,
@@ -118,7 +107,10 @@ export default function Hero() {
         <img
           ref={imageRef}
           src="/images/gallery-interior-glass.png"
+          srcSet="/images/gallery-interior-glass.webp 1x, /images/gallery-interior-glass@2x.webp 2x"
           alt="Cafe PS Cheese glass-roof interior with arched windows and natural light"
+          width="1080"
+          height="720"
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
           fetchPriority="high"
@@ -177,13 +169,7 @@ export default function Hero() {
               ref={headline1Ref}
               className="block font-display font-normal text-[clamp(32px,4.17vw+18.7px,72px)] leading-[1.05] tracking-[0.02em] text-brand-dark opacity-0 translate-y-8"
             >
-              Artisan Cheese
-            </span>
-            <span
-              ref={headline2Ref}
-              className="block font-display font-light italic text-[clamp(32px,4.17vw+18.7px,72px)] leading-[1.05] tracking-[0.02em] text-brand-dark opacity-0 translate-y-8"
-            >
-              Destination
+              Hyderabad’s Premier Artisan Cheese Café
             </span>
           </h1>
 
@@ -191,7 +177,7 @@ export default function Hero() {
             ref={subRef}
             className="mt-6 font-body font-normal text-[clamp(15px,1.5vw,17px)] leading-[1.7] text-brand-text opacity-0 translate-y-5 max-w-[90%] mx-auto md:mx-0"
           >
-            Glass-roof Mediterranean sanctuary &bull; In-house artisan cheese &bull; Roastery specialty coffee
+            Glass‑roof ambience • In‑house artisan cheese • Specialty coffee
           </p>
 
           {/* CTA Buttons — PRIMARY (Reserve) on left, SECONDARY (Menu) on right */}
@@ -204,8 +190,9 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary min-h-[44px] flex items-center justify-center gap-2 group/btn"
+              aria-label="Reserve a table"
             >
-              <span>Reserve a Table on WhatsApp</span>
+              <span>Reserve Now</span>
               <span className="transition-transform duration-300 group-hover/btn:translate-x-1 inline-block">
                 &rarr;
               </span>
