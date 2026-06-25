@@ -80,7 +80,7 @@ export default function Hero() {
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 1.0,
             ease: 'power3.out',
           },
           '-=0.3'
@@ -90,7 +90,7 @@ export default function Hero() {
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 1.0,
             ease: 'power3.out',
           },
           '-=0.6'
@@ -140,6 +140,16 @@ export default function Hero() {
     const mouseYVal = e.clientY - rect.top - height / 2;
     mouseX.set(mouseXVal / width);
     mouseY.set(mouseYVal / height);
+
+    // Spotlight cursor coordinates for grid lines
+    const gridContainer = e.currentTarget.querySelector('.grid-container') as HTMLElement;
+    if (gridContainer) {
+      const gridRect = gridContainer.getBoundingClientRect();
+      const x = e.clientX - gridRect.left;
+      const y = e.clientY - gridRect.top;
+      gridContainer.style.setProperty('--mouse-x', `${x}px`);
+      gridContainer.style.setProperty('--mouse-y', `${y}px`);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -162,10 +172,41 @@ export default function Hero() {
       className="relative min-h-[100dvh] flex items-center justify-center bg-[#FAF8F5] pt-[72px] scroll-mt-[72px] scroll-anchor"
     >
       {/* Structural Glass Grid Container */}
-      <div className="grid grid-cols-1 md:grid-cols-12 max-w-7xl mx-auto w-full border-x border-[#2D1B14]/[0.06] min-h-[calc(100dvh-72px)] bg-[#FAF8F5]">
+      <div className="grid grid-container grid-cols-1 md:grid-cols-12 max-w-7xl mx-auto w-full border-x border-[#2D1B14]/[0.06] min-h-[calc(100dvh-72px)] bg-[#FAF8F5] relative group/hero">
         
+        {/* Glass Pane Grid Borders with Interactive Spotlight Glow */}
+        <div className="absolute inset-0 pointer-events-none z-10 hidden md:block">
+          {/* Left vertical border */}
+          <div className="absolute top-0 bottom-0 left-0 w-px bg-[#2D1B14]/[0.06]">
+            <div 
+              className="absolute inset-0 w-full h-full opacity-0 group-hover/hero:opacity-100 transition-opacity duration-300"
+              style={{
+                background: 'radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(198, 161, 91, 0.4) 0%, transparent 100%)',
+              }}
+            />
+          </div>
+          {/* Right vertical border */}
+          <div className="absolute top-0 bottom-0 right-0 w-px bg-[#2D1B14]/[0.06]">
+            <div 
+              className="absolute inset-0 w-full h-full opacity-0 group-hover/hero:opacity-100 transition-opacity duration-300"
+              style={{
+                background: 'radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(198, 161, 91, 0.4) 0%, transparent 100%)',
+              }}
+            />
+          </div>
+          {/* Middle vertical divider */}
+          <div className="absolute top-0 bottom-0 left-[41.6666%] w-px bg-[#2D1B14]/[0.06]">
+            <div 
+              className="absolute inset-0 w-full h-full opacity-0 group-hover/hero:opacity-100 transition-opacity duration-300"
+              style={{
+                background: 'radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(198, 161, 91, 0.4) 0%, transparent 100%)',
+              }}
+            />
+          </div>
+        </div>
+
         {/* Left Column: Editorial Typography & CTAs (Col span 5) */}
-        <div className="col-span-1 md:col-span-5 flex flex-col justify-center p-8 md:p-10 lg:p-12 border-b md:border-b-0 md:border-r border-[#2D1B14]/[0.06] bg-[#FAF8F5]">
+        <div className="col-span-1 md:col-span-5 flex flex-col justify-center p-8 md:p-10 lg:p-12 border-b md:border-b-0 md:border-r border-[#2D1B14]/[0.06] bg-[#FAF8F5] relative z-20">
           
           {/* Location Kicker */}
           <div className="flex items-center gap-1.5 justify-start flex-wrap">
@@ -177,21 +218,25 @@ export default function Hero() {
               KAVURI HILLS
             </span>
           </div>
-
+ 
           {/* Main Editorial Headline */}
-          <h1 className="mt-5 flex flex-col gap-2">
-            <span
-              ref={headline1Ref}
-              className="block font-display font-light text-[clamp(32px,3.8vw,56px)] leading-[1.05] text-brand-dark opacity-0 translate-y-8 tracking-[0.02em] font-serif"
-            >
-              Hyderabad’s Premier
-            </span>
-            <span
-              ref={headline2Ref}
-              className="block font-display font-normal italic text-[clamp(32px,3.8vw,56px)] leading-[1.05] text-brand-dark opacity-0 translate-y-8 tracking-[0.02em] font-serif"
-            >
-              Artisan Cheese Café
-            </span>
+          <h1 className="mt-5 flex flex-col gap-1">
+            <div className="overflow-hidden py-1">
+              <span
+                ref={headline1Ref}
+                className="block font-display font-light text-[clamp(32px,3.8vw,56px)] leading-[1.05] text-brand-dark opacity-0 translate-y-full tracking-[0.02em] font-serif"
+              >
+                Hyderabad’s Premier
+              </span>
+            </div>
+            <div className="overflow-hidden py-1">
+              <span
+                ref={headline2Ref}
+                className="block font-display font-normal italic text-[clamp(32px,3.8vw,56px)] leading-[1.05] text-brand-dark opacity-0 translate-y-full tracking-[0.02em] font-serif"
+              >
+                Artisan Cheese Café
+              </span>
+            </div>
           </h1>
 
           {/* Description */}
