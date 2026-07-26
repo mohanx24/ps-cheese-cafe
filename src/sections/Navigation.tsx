@@ -14,15 +14,15 @@ const navLinks = [
 const navVariants = {
   default: {
     width: '100%',
-    maxWidth: '1920px',
+    maxWidth: '100%',
     borderRadius: '0px',
     top: '0px',
-    x: '-50%',
-    left: '50%',
+    x: '0%',
+    left: '0%',
     height: '72px',
-    backgroundColor: 'rgba(247, 243, 238, 0.85)',
-    borderColor: 'rgba(229, 221, 209, 0.8)',
-    boxShadow: '0 1px 2px rgba(43,29,21,0.05)',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    boxShadow: 'none',
   },
   capsule: {
     width: '90%',
@@ -118,18 +118,18 @@ export default function Navigation() {
       }}
       className="fixed z-50 border backdrop-blur-xl backdrop-saturate-150 p-0 overflow-visible"
     >
-      <div className={`h-full flex items-center justify-between w-full max-w-[var(--max-content-width)] mx-auto transition-all duration-500 ease-out ${isCapsule ? 'px-4 md:px-5' : 'px-6 md:px-10'}`}>
+      <div className={`h-full flex items-center justify-between w-full max-w-[var(--max-content-width)] mx-auto transition-all duration-500 ease-out ${isCapsule ? 'px-4 lg:px-5' : 'px-6 lg:px-10'}`}>
         <motion.a
           layout
           href="#"
           className="flex items-center select-none group h-full"
           aria-label="Cafe PS Cheese by Roastery home"
         >
-          <Logo />
+          <Logo variant={isCapsule ? 'dark' : 'light'} />
         </motion.a>
 
         {/* Desktop Nav Links & CTA */}
-        <motion.div layout className="hidden md:flex items-center gap-8 h-full">
+        <motion.div layout className="hidden lg:flex items-center gap-8 h-full">
           <motion.div
             layout
             className="flex items-center gap-3 h-full relative"
@@ -162,10 +162,16 @@ export default function Navigation() {
                       }}
                       className="flex flex-col h-[36px]"
                     >
-                      <span className={`block h-[18px] leading-[18px] transition-colors duration-200 ${isActive ? 'text-brand-accent-text' : 'text-brand-dark'}`}>
+                      <span className={`block h-[18px] leading-[18px] transition-colors duration-200 ${
+                        isActive
+                          ? 'text-[#C6A15B]'
+                          : isCapsule
+                            ? 'text-[#2D1B14]'
+                            : 'text-[#FAF7F2]/80 group-hover:text-white'
+                      }`}>
                         {link.label}
                       </span>
-                      <span className="block h-[18px] leading-[18px] text-brand-accent-text">
+                      <span className="block h-[18px] leading-[18px] text-[#C6A15B]">
                         {link.label}
                       </span>
                     </motion.span>
@@ -212,7 +218,11 @@ export default function Navigation() {
             href={WHATSAPP_RESERVE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary uppercase font-ui font-medium flex items-center justify-center transition-colors duration-200"
+            className={`uppercase font-ui font-medium flex items-center justify-center transition-all duration-300 ${
+              isCapsule
+                ? 'btn-primary'
+                : 'border border-[#C6A15B]/50 hover:border-[#C6A15B] text-[#FAF7F2] hover:text-white bg-transparent hover:bg-white/5'
+            }`}
           >
             Reserve Table
           </motion.a>
@@ -220,8 +230,8 @@ export default function Navigation() {
 
         {/* Mobile Hamburger with SVG morph */}
         <button
-          className={`relative z-50 md:hidden flex items-center justify-center w-12 h-12 transition-colors duration-300 ${
-            menuOpen ? 'text-[#F7F3EE] hover:text-[#C6A15B]' : 'text-brand-dark hover:text-brand-accent-text'
+          className={`relative z-50 lg:hidden flex items-center justify-center w-12 h-12 transition-colors duration-300 ${
+            menuOpen || !isCapsule ? 'text-[#F7F3EE] hover:text-[#C6A15B]' : 'text-brand-dark hover:text-brand-accent-text'
           }`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
