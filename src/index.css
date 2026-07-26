@@ -789,3 +789,19 @@ button:focus-visible {
     transition: width 0s;
   }
 }
+
+/* Discover Indicator arrow bobbing animation */
+@keyframes discover-bob {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 0.8;
+  }
+}
+
+.discover-indicator-arrow {
+  animation: discover-bob 2s infinite ease-in-out;
+}

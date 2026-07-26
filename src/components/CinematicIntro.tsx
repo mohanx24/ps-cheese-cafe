@@ -88,6 +88,11 @@ export default function CinematicIntro({ onComplete }: Props) {
       ease: 'power2.inOut',
     }, zoomAt + 0.1);
 
+    // Dispatch early reveal event for background page content
+    tl.call(() => {
+      window.dispatchEvent(new CustomEvent('intro:reveal'));
+    }, [], zoomAt + 0.15);
+
     // Fade out main overlay wrapper at the end of zoom
     tl.to(overlayRef.current, {
       opacity: 0,
@@ -105,6 +110,7 @@ export default function CinematicIntro({ onComplete }: Props) {
   function handleFinish() {
     document.body.style.overflow = '';
     if (overlayRef.current) overlayRef.current.style.display = 'none';
+    window.dispatchEvent(new CustomEvent('intro:reveal'));
     window.dispatchEvent(new CustomEvent('intro:complete'));
     onComplete?.();
   }
