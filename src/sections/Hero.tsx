@@ -40,90 +40,83 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 });
+      // Pre-set hero image scale to 1.08 immediately for a smooth, subtle zoom out
+      if (imageRef.current) {
+        gsap.set(imageRef.current, { scale: 1.08 });
+      }
 
-      // Window portal reveal on mount
-      tl.fromTo(
-        portalRef.current,
-        { scale: 0.95, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.4, ease: 'power3.out' },
-        0
-      );
+      // Wait for the cinematic intro to complete before animating hero content.
+      const startTimeline = () => {
+        const tl = gsap.timeline({ delay: 0.05 });
 
-      // Visual zoom inside portal
-      tl.fromTo(
-        imageRef.current,
-        { scale: 1.25 },
-        { scale: 1.1, duration: 1.8, ease: 'power2.out' },
-        0
-      );
-
-      // Kicker & Location info
-      tl.to(labelRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-      }, 0.3)
-        .to(
-          locationRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: 'power3.out',
-          },
-          '-=0.4'
-        )
-        .to(
-          headline1Ref.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.0,
-            ease: 'power3.out',
-          },
-          '-=0.3'
-        )
-        .to(
-          headline2Ref.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.0,
-            ease: 'power3.out',
-          },
-          '-=0.6'
-        )
-        .to(
-          subRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-          },
-          '-=0.5'
-        )
-        .to(
-          buttonsRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-          },
-          '-=0.4'
-        )
-        .to(
-          [scrollIndicatorRef.current, leftScrollRef.current],
-          {
-            opacity: 1,
-            duration: 0.6,
-            ease: 'power2.out',
-          },
-          '-=0.3'
+        // Ultra-smooth cinematic scale reveal from 1.08 to 1.0
+        tl.to(
+          imageRef.current,
+          { scale: 1.0, duration: 2.4, ease: 'power3.out' },
+          0
         );
+
+        // Kicker & Location info
+        tl.to(labelRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+        }, 0.1)
+          .to(
+            locationRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: 'power3.out',
+            },
+            '-=0.4'
+          )
+          .to(
+            headline1Ref.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: 'power3.out',
+            },
+            '-=0.3'
+          )
+          .to(
+            subRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: 'power3.out',
+            },
+            '-=0.4'
+          )
+          .to(
+            buttonsRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: 'power3.out',
+            },
+            '-=0.3'
+          )
+          .to(
+            [scrollIndicatorRef.current, leftScrollRef.current],
+            {
+              opacity: 1,
+              duration: 0.6,
+              ease: 'power2.out',
+            },
+            '-=0.2'
+          );
+      };
+
+      // Listen for the cinematic intro overlay's completion signal.
+      // { once: true } ensures this fires exactly once and self-removes.
+      window.addEventListener('intro:complete', startTimeline, { once: true });
     });
 
     return () => {

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import CinematicIntro from '@/components/CinematicIntro';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -33,6 +34,14 @@ export default function App() {
       lenisRef.current = lenis;
       lenis.on('scroll', ScrollTrigger.update);
     };
+
+    // Defer Lenis until the cinematic intro has completed so smooth scroll
+    // doesn't interfere with the locked-scroll opening sequence.
+    // On reduced-motion the intro fires immediately, so this is a no-op delay.
+    const handleIntroComplete = () => {
+      handleZoomAndScrollState();
+    };
+    window.addEventListener('intro:complete', handleIntroComplete, { once: true });
 
     const destroyLenis = () => {
       if (!lenis) return;
@@ -102,8 +111,10 @@ export default function App() {
       window.visualViewport.addEventListener('scroll', handleZoomAndScrollState);
     }
 
-    // Run initial check
-    handleZoomAndScrollState();
+    // Intentionally do NOT call handleZoomAndScrollState() here on initial mount.
+    // Lenis will be initialised by the intro:complete listener above.
+    // (If reduced-motion: the intro fires intro:complete synchronously via its
+    // own 200ms fade, so Lenis starts almost immediately.)
 
     return () => {
       destroyLenis();
@@ -111,6 +122,7 @@ export default function App() {
       window.removeEventListener('wheel', handleWheel, { capture: true });
       window.removeEventListener('touchmove', handleTouch, { capture: true });
       window.removeEventListener('resize', handleZoomAndScrollState);
+      window.removeEventListener('intro:complete', handleIntroComplete);
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleZoomAndScrollState);
         window.visualViewport.removeEventListener('scroll', handleZoomAndScrollState);
@@ -120,6 +132,9 @@ export default function App() {
 
   return (
     <div className="relative">
+      {/* ── Cinematic Opening Intro ──────────────────────────────────────── */}
+      <CinematicIntro />
+
       <a href="#main-content" className="sr-only focus:not-sr-only btn-primary absolute top-2 left-2 z-[100]">Skip to Content</a>
       {/* Navigation */}
       <Navigation />
